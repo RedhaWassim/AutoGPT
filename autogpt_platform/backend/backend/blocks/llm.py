@@ -27,7 +27,7 @@ from backend.util.settings import BehaveAs, Settings
 
 logger = logging.getLogger(__name__)
 
-LLMProviderName = Literal["anthropic", "groq", "openai", "ollama", "open_router"]
+LLMProviderName = Literal["anthropic", "groq", "openai", "ollama", "edenai","open_router"]
 AICredentials = CredentialsMetaInput[LLMProviderName, Literal["api_key"]]
 
 TEST_CREDENTIALS = APIKeyCredentials(
@@ -48,7 +48,7 @@ TEST_CREDENTIALS_INPUT = {
 def AICredentialsField() -> AICredentials:
     return CredentialsField(
         description="API key for the LLM provider.",
-        provider=["anthropic", "groq", "openai", "ollama", "open_router"],
+        provider=["anthropic", "groq", "openai", "ollama", "edenai","open_router"],
         supported_credential_types={"api_key"},
         discriminator="model",
         discriminator_mapping={
@@ -117,6 +117,8 @@ class LlmModel(str, Enum, metaclass=LlmModelMeta):
     PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE = (
         "perplexity/llama-3.1-sonar-large-128k-online"
     )
+    # EdenAI models
+    EDENAI_GPT4 = "edenai/gpt-4"
 
     @property
     def metadata(self) -> ModelMetadata:
@@ -162,6 +164,10 @@ MODEL_METADATA = {
     LlmModel.PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE: ModelMetadata(
         "open_router", 8192
     ),
+    LlmModel.EDENAI_GPT4: ModelMetadata(
+        "edenai", 4000
+    )
+
 }
 
 for model in LlmModel:

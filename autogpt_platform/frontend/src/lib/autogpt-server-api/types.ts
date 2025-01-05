@@ -120,6 +120,7 @@ export const PROVIDER_NAMES = {
   REVID: "revid",
   UNREAL_SPEECH: "unreal_speech",
   HUBSPOT: "hubspot",
+  edenai: "edenai"
 } as const;
 // --8<-- [end:BlockIOCredentialsSubSchema]
 

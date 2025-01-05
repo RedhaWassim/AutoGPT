@@ -91,7 +91,13 @@ open_router_credentials = APIKeyCredentials(
     title="Use Credits for Open Router",
     expires_at=None,
 )
-
+edenai_credentials = APIKeyCredentials(
+    id="id_generation",
+    provider="edenai",
+    api_key=SecretStr(settings.secrets.edenai_api_key),
+    title="Use Credits for EdenAI",
+    expires_at=None,
+)
 
 DEFAULT_CREDENTIALS = [
     revid_credentials,
@@ -104,6 +110,7 @@ DEFAULT_CREDENTIALS = [
     jina_credentials,
     unreal_credentials,
     open_router_credentials,
+    edenai_credentials
 ]
 
 
@@ -155,6 +162,8 @@ class IntegrationCredentialsStore:
             all_credentials.append(unreal_credentials)
         if settings.secrets.open_router_api_key:
             all_credentials.append(open_router_credentials)
+        if settings.secrets.edenai_api_key:
+            all_credentials.append(edenai_credentials)
         return all_credentials
 
     def get_creds_by_id(self, user_id: str, credentials_id: str) -> Credentials | None:

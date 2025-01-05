@@ -292,6 +292,8 @@ class Secrets(UpdateTrackingModel["Secrets"], BaseSettings):
 
     fal_key: str = Field(default="", description="FAL API key")
 
+    edenai_api_key: str = Field(default="", description="EdenAI API Key")
+
     # Add more secret fields as needed
 
     model_config = SettingsConfigDict(

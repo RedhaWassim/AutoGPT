@@ -30,6 +30,7 @@ from backend.integrations.credentials_store import (
     replicate_credentials,
     revid_credentials,
     unreal_credentials,
+    edenai_credentials
 )
 
 # =============== Configure the cost for each LLM Model call =============== #
@@ -62,6 +63,7 @@ MODEL_COST: dict[LlmModel, int] = {
     LlmModel.EVA_QWEN_2_5_32B: 1,
     LlmModel.DEEPSEEK_CHAT: 2,
     LlmModel.PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE: 1,
+    LlmModel.EDENAI_GPT4: 1,
 }
 
 for model in LlmModel:
@@ -116,6 +118,20 @@ LLM_COST = (
         )
         for model, cost in MODEL_COST.items()
         if MODEL_METADATA[model].provider == "groq"
+    ]
+    # EdenAI models
+    +
+    [
+        BlockCost(
+            cost_type=BlockCostType.RUN,
+            cost_filter={
+                "model": model,
+                "credentials" : {"id":edenai_credentials.id}
+                },
+                cost_amount=cost
+        )
+            for model,cost in MODEL_COST.items()
+            if MODEL_METADATA[model].provider == "edenai"
     ]
     # Open Router Models
     + [
