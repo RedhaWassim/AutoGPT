@@ -259,6 +259,7 @@ class Secrets(UpdateTrackingModel["Secrets"], BaseSettings):
     anthropic_api_key: str = Field(default="", description="Anthropic API key")
     groq_api_key: str = Field(default="", description="Groq API key")
     open_router_api_key: str = Field(default="", description="Open Router API Key")
+    edenai_api_key: str = Field(default="", description="EdenAI API Key")
 
     reddit_client_id: str = Field(default="", description="Reddit client ID")
     reddit_client_secret: str = Field(default="", description="Reddit client secret")
@@ -292,7 +293,6 @@ class Secrets(UpdateTrackingModel["Secrets"], BaseSettings):
 
     fal_key: str = Field(default="", description="FAL API key")
 
-    edenai_api_key: str = Field(default="", description="EdenAI API Key")
 
     # Add more secret fields as needed
 

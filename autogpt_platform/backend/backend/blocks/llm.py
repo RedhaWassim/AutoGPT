@@ -24,6 +24,7 @@ from backend.data.model import (
 )
 from backend.util import json
 from backend.util.settings import BehaveAs, Settings
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -407,6 +408,36 @@ class AIStructuredResponseGeneratorBlock(Block):
                 response.choices[0].message.content or "",
                 response.usage.prompt_tokens if response.usage else 0,
                 response.usage.completion_tokens if response.usage else 0,
+            )
+        elif provider == "edenai":
+            api_key = credentials.api_key.get_secret_value()
+            headers = {"Authorization": f"Bearer {api_key}"}
+            url = "https://api.edenai.run/v2/multimodal/chat"
+
+            formatted_prompt = [{"role": p["role"], "content": [{"type": "text", "content": {"text": p["content"]}}]} for p in prompt]
+
+            payload = {
+                "providers": [llm_model.value],
+                "messages": formatted_prompt,
+                "max_tokens": max_tokens,
+            }
+
+            response = requests.post(url, json=payload, headers=headers)
+
+            if response.status_code != 200:
+                raise ValueError(f"EdenAI API error: {response.text}")
+
+            response_data = response.json()
+            provider_response = response_data.get(llm_model.value, {})
+            generated_text = provider_response.get("generated_text", "")
+            usage_data = provider_response.get("usage", {})
+            input_tokens = usage_data.get("input_tokens", 0)
+            output_tokens = usage_data.get("output_tokens", 0)
+
+            return (
+                generated_text,
+                input_tokens,
+                output_tokens,
             )
         else:
             raise ValueError(f"Unsupported LLM provider: {provider}")
