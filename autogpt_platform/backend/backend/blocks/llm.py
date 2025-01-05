@@ -119,7 +119,7 @@ class LlmModel(str, Enum, metaclass=LlmModelMeta):
         "perplexity/llama-3.1-sonar-large-128k-online"
     )
     # EdenAI models
-    EDENAI_GPT4 = "edenai/gpt-4"
+    EDENAI_GPT4 = "edenai/openai/gpt-4"
 
     @property
     def metadata(self) -> ModelMetadata:
@@ -415,9 +415,9 @@ class AIStructuredResponseGeneratorBlock(Block):
             url = "https://api.edenai.run/v2/multimodal/chat"
 
             formatted_prompt = [{"role": p["role"], "content": [{"type": "text", "content": {"text": p["content"]}}]} for p in prompt]
-
+            provider_model = "/".join(llm_model.value.split('/')[1:])
             payload = {
-                "providers": [llm_model.value],
+                "providers": [provider_model],
                 "messages": formatted_prompt,
                 "max_tokens": max_tokens,
             }
@@ -428,12 +428,11 @@ class AIStructuredResponseGeneratorBlock(Block):
                 raise ValueError(f"EdenAI API error: {response.text}")
 
             response_data = response.json()
-            provider_response = response_data.get(llm_model.value, {})
+            provider_response = response_data.get(provider_model, {})
             generated_text = provider_response.get("generated_text", "")
             usage_data = provider_response.get("usage", {})
             input_tokens = usage_data.get("input_tokens", 0)
             output_tokens = usage_data.get("output_tokens", 0)
-
             return (
                 generated_text,
                 input_tokens,
