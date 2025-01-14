@@ -111,6 +111,7 @@ export default function PrivatePage() {
       "7f26de70-ba0d-494e-ba76-238e65e7b45f", // Jina
       "66f20754-1b81-48e4-91d0-f4f0dd82145f", // Unreal Speech
       "b5a0e27d-0c98-4df3-a4b9-10193e1f3c40", // Open Router
+      "5f42cd47-0d3b-4452-bb5a-338b6faef79f", //edenai
     ],
     [],
   );
