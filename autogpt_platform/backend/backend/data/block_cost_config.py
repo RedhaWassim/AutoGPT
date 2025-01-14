@@ -63,7 +63,29 @@ MODEL_COST: dict[LlmModel, int] = {
     LlmModel.EVA_QWEN_2_5_32B: 1,
     LlmModel.DEEPSEEK_CHAT: 2,
     LlmModel.PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE: 1,
-    LlmModel.EDENAI_GPT4: 1,
+    LlmModel.EDENAI_GPT4 :1,
+    LlmModel.EDENAI_CLAUDE_3_5_SONNET_20240620 : 1,
+    LlmModel.EDENAI_CLAUDE_3_5_SONNET_20240620_V1_0 : 1,
+    LlmModel.EDENAI_CLAUDE_3_HAIKU_20240307 : 1,
+    LlmModel.EDENAI_CLAUDE_3_HAIKU_20240307_V1_0 : 1,
+    LlmModel.EDENAI_CLAUDE_3_OPUS_20240229 : 1,
+    LlmModel.EDENAI_CLAUDE_3_SONNET_20240229 : 1,
+    LlmModel.EDENAI_CLAUDE_3_SONNET_20240229_V1_0 : 1,
+    LlmModel.EDENAI_GEMINI_1_5_FLASH : 1,
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_EXP_0801 : 1,
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_EXP_0827 : 1,
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_LATEST : 1,
+    LlmModel.EDENAI_GEMINI_1_5_PRO : 1,
+    LlmModel.EDENAI_GEMINI_1_5_PRO_EXP_0801 : 1,
+    LlmModel.EDENAI_GEMINI_1_5_PRO_EXP_0827 : 1,
+    LlmModel.EDENAI_GEMINI_1_5_PRO_LATEST : 1,
+    LlmModel.EDENAI_GEMINI_PRO : 1,
+    LlmModel.EDENAI_GPT4_TURBO :1,
+    LlmModel.EDENAI_GPT4O : 1,
+    LlmModel.EDENAI_GPT4O_2024_05_13 : 1,
+    LlmModel.EDENAI_GPT4O_2024_08_06 : 1,
+    LlmModel.EDENAI_GPT4O_MINI : 1,
+    LlmModel.EDENAI_GPT4O_MINI_2024_07_18 : 1,
 }
 
 for model in LlmModel:
@@ -119,20 +141,6 @@ LLM_COST = (
         for model, cost in MODEL_COST.items()
         if MODEL_METADATA[model].provider == "groq"
     ]
-    # EdenAI models
-    +
-    [
-        BlockCost(
-            cost_type=BlockCostType.RUN,
-            cost_filter={
-                "model": model,
-                "credentials" : {"id":edenai_credentials.id}
-                },
-                cost_amount=cost
-        )
-            for model,cost in MODEL_COST.items()
-            if MODEL_METADATA[model].provider == "edenai"
-    ]
     # Open Router Models
     + [
         BlockCost(
@@ -149,6 +157,20 @@ LLM_COST = (
         )
         for model, cost in MODEL_COST.items()
         if MODEL_METADATA[model].provider == "open_router"
+    ]
+    # EdenAI models
+    +
+    [
+        BlockCost(
+            cost_type=BlockCostType.RUN,
+            cost_filter={
+                "model": model,
+                "credentials" : {"id":edenai_credentials.id}
+                },
+                cost_amount=cost
+        )
+            for model,cost in MODEL_COST.items()
+            if MODEL_METADATA[model].provider == "edenai"
     ]
 )
 

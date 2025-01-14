@@ -118,8 +118,35 @@ class LlmModel(str, Enum, metaclass=LlmModelMeta):
     PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE = (
         "perplexity/llama-3.1-sonar-large-128k-online"
     )
-    # EdenAI models
+    # EdenAI Anthropic models
+    EDENAI_CLAUDE_3_5_SONNET_20240620 = "edenai/anthropic/claude-3-5-sonnet-20240620"
+    EDENAI_CLAUDE_3_5_SONNET_20240620_V1_0 = "edenai/anthropic/claude-3-5-sonnet-20240620-v1:0"
+    EDENAI_CLAUDE_3_HAIKU_20240307 = "edenai/anthropic/claude-3-haiku-20240307"
+    EDENAI_CLAUDE_3_HAIKU_20240307_V1_0 = "edenai/anthropic/claude-3-haiku-20240307-v1:0"
+    EDENAI_CLAUDE_3_OPUS_20240229 = "edenai/anthropic/claude-3-opus-20240229"
+    EDENAI_CLAUDE_3_SONNET_20240229 = "edenai/anthropic/claude-3-sonnet-20240229"
+    EDENAI_CLAUDE_3_SONNET_20240229_V1_0 = "edenai/anthropic/claude-3-sonnet-20240229-v1:0"
+
+    # EdenAI Google models
+    EDENAI_GEMINI_1_5_FLASH = "edenai/google/gemini-1.5-flash"
+    EDENAI_GEMINI_1_5_FLASH_EXP_0801 = "edenai/google/gemini-1.5-flash-exp-0801"
+    EDENAI_GEMINI_1_5_FLASH_EXP_0827 = "edenai/google/gemini-1.5-flash-exp-0827"
+    EDENAI_GEMINI_1_5_FLASH_LATEST = "edenai/google/gemini-1.5-flash-latest"
+    EDENAI_GEMINI_1_5_PRO = "edenai/google/gemini-1.5-pro"
+    EDENAI_GEMINI_1_5_PRO_EXP_0801 = "edenai/google/gemini-1.5-pro-exp-0801"
+    EDENAI_GEMINI_1_5_PRO_EXP_0827 = "edenai/google/gemini-1.5-pro-exp-0827"
+    EDENAI_GEMINI_1_5_PRO_LATEST = "edenai/google/gemini-1.5-pro-latest"
+    EDENAI_GEMINI_PRO = "edenai/google/gemini-pro"
+
+    # EdenAI OpenAI models
     EDENAI_GPT4 = "edenai/openai/gpt-4"
+    EDENAI_GPT4_TURBO = "edenai/openai/gpt-4-turbo"
+    EDENAI_GPT4O = "edenai/openai/gpt-4o"
+    EDENAI_GPT4O_2024_05_13 = "edenai/openai/gpt-4o-2024-05-13"
+    EDENAI_GPT4O_2024_08_06 = "edenai/openai/gpt-4o-2024-08-06"
+    EDENAI_GPT4O_MINI = "edenai/openai/gpt-4o-mini"
+    EDENAI_GPT4O_MINI_2024_07_18 = "edenai/openai/gpt-4o-mini-2024-07-18"
+
 
     @property
     def metadata(self) -> ModelMetadata:
@@ -165,9 +192,29 @@ MODEL_METADATA = {
     LlmModel.PERPLEXITY_LLAMA_3_1_SONAR_LARGE_128K_ONLINE: ModelMetadata(
         "open_router", 8192
     ),
-    LlmModel.EDENAI_GPT4: ModelMetadata(
-        "edenai", 4000
-    )
+    LlmModel.EDENAI_GPT4 : ModelMetadata("edenai", 4000),
+    LlmModel.EDENAI_CLAUDE_3_5_SONNET_20240620 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_5_SONNET_20240620_V1_0 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_HAIKU_20240307 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_HAIKU_20240307_V1_0 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_OPUS_20240229 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_SONNET_20240229 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_CLAUDE_3_SONNET_20240229_V1_0 : ModelMetadata("edenai", 4096),
+    LlmModel.EDENAI_GEMINI_1_5_FLASH : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_EXP_0801 : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_EXP_0827 : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_FLASH_LATEST : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_PRO : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_PRO_EXP_0801 : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_PRO_EXP_0827 : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_1_5_PRO_LATEST : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GEMINI_PRO : ModelMetadata("edenai", 8192),
+    LlmModel.EDENAI_GPT4_TURBO : ModelMetadata("edenai", 4000),
+    LlmModel.EDENAI_GPT4O : ModelMetadata("edenai", 128000),
+    LlmModel.EDENAI_GPT4O_2024_05_13 : ModelMetadata("edenai", 128000),
+    LlmModel.EDENAI_GPT4O_2024_08_06 : ModelMetadata("edenai", 128000),
+    LlmModel.EDENAI_GPT4O_MINI : ModelMetadata("edenai", 128000),
+    LlmModel.EDENAI_GPT4O_MINI_2024_07_18 : ModelMetadata("edenai", 128000),
 
 }
 
@@ -419,9 +466,10 @@ class AIStructuredResponseGeneratorBlock(Block):
             payload = {
                 "providers": [provider_model],
                 "messages": formatted_prompt,
-                "max_tokens": max_tokens,
             }
-
+            if isinstance(max_tokens, int):
+                payload["max_tokens"] = max_tokens
+            
             response = requests.post(url, json=payload, headers=headers)
 
             if response.status_code != 200:
