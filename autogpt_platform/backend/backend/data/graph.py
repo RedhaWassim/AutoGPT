@@ -673,8 +673,6 @@ async def fix_llm_provider_credentials():
             credentials.provider = credentials_meta["provider"] = "openai"
         elif api_key.startswith("gsk_"):
             credentials.provider = credentials_meta["provider"] = "groq"
-        elif api_key.startswith("eyJh"):
-            credentials.provider = credentials_meta["provider"] = "edenai"
         else:
             logger.warning(
                 f"Could not identify provider from key prefix {api_key[:13]}*****"
