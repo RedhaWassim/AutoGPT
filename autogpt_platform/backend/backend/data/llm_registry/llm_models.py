@@ -278,6 +278,13 @@ class LLMModel(str, Enum, metaclass=LLMModelMeta):
     TENCENT_HY4_PREVIEW = "tencent/hy4-preview"
     # Unbiased models
     UNBIASED_PARETO = "unbiased/pareto"
+    # Eden AI models
+    EDENAI_GPT5_4_MINI = "edenai/openai/gpt-5.4-mini"
+    EDENAI_GPT5_5 = "edenai/openai/gpt-5.5"
+    EDENAI_CLAUDE_4_5_HAIKU = "edenai/anthropic/claude-haiku-4-5"
+    EDENAI_CLAUDE_5_5_SONNET = "edenai/anthropic/claude-sonnet-5-5"
+    EDENAI_GEMINI_2_5_FLASH = "edenai/google/gemini-2.5-flash"
+    EDENAI_MISTRAL_LARGE_2512 = "edenai/mistral/mistral-large-2512"
     # Llama API models
     LLAMA_API_LLAMA_4_SCOUT = "Llama-4-Scout-17B-16E-Instruct-FP8"
     LLAMA_API_LLAMA4_MAVERICK = "Llama-4-Maverick-17B-128E-Instruct-FP8"

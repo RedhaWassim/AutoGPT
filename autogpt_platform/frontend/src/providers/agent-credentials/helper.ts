@@ -8,6 +8,7 @@ export function toDisplayName(provider: unknown): string {
     aiml_api: "AI/ML",
     d_id: "D-ID",
     e2b: "E2B",
+    edenai: "Eden AI",
     llama_api: "Llama API",
     codex: "OpenAI",
     open_router: "Open Router",

@@ -35,7 +35,7 @@ import functools
 import json as json_module
 import logging
 from datetime import datetime, timezone
-from typing import Any, Literal, cast
+from typing import Any, Callable, Literal, cast
 
 import anthropic
 import httpx
@@ -55,6 +55,7 @@ from backend.util.llm.conversions import (
     ToolCall,
     ToolContentBlock,
     convert_openai_tool_fmt_to_anthropic,
+    extract_edenai_cost,
     extract_openai_reasoning,
     extract_openai_tool_calls,
     extract_openrouter_cost,
@@ -111,9 +112,23 @@ ProviderLiteral = Literal[
     "llama_api",
     "aiml_api",
     "v0",
+    "edenai",
 ]
 
 ExecutionMode = Literal["sync", "batch", "flex"]
+
+# Eden AI's OpenAI-compatible LLM endpoint. Catalog slugs for Eden AI are
+# namespaced ``edenai/<provider>/<model>`` so they never collide with the
+# OpenRouter ``<provider>/<model>`` slugs; the prefix is stripped before
+# the request since Eden AI addresses models as ``<provider>/<model>``.
+EDENAI_BASE_URL = "https://api.edenai.run/v3"
+EDENAI_SLUG_PREFIX = "edenai/"
+
+
+def edenai_model_id(slug: str) -> str:
+    """``edenai/openai/gpt-5.4-mini`` → ``openai/gpt-5.4-mini``."""
+    return slug.removeprefix(EDENAI_SLUG_PREFIX)
+
 
 # Providers that accept ``service_tier="flex"``. OpenAI exposes it
 # natively on its Responses API; OpenRouter forwards the param through
@@ -433,6 +448,21 @@ async def _dispatch_sync(
             parallel_tool_calls=parallel_tool_calls,
             timeout_seconds=timeout_seconds,
             include_openrouter_extras=False,
+        )
+    if provider == "edenai":
+        return await _call_openai_compat(
+            base_url=EDENAI_BASE_URL,
+            model=edenai_model_id(model),
+            api_key=api_key,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            tools=tools,
+            force_json_output=force_json_output,
+            parallel_tool_calls=parallel_tool_calls,
+            timeout_seconds=timeout_seconds,
+            include_openrouter_extras=False,
+            extract_cost=extract_edenai_cost,
         )
 
     raise ValueError(f"Unsupported LLM provider: {provider}")
@@ -835,6 +865,7 @@ async def _call_openai_compat(
     extra_headers: dict[str, str] | None = None,
     default_headers: dict[str, str] | None = None,
     service_tier: str | None = None,
+    extract_cost: Callable[[Any], float | None] | None = None,
 ) -> ProviderResponse:
     client_kwargs: dict[str, Any] = {"base_url": base_url, "api_key": api_key}
     if default_headers:
@@ -893,7 +924,9 @@ async def _call_openai_compat(
         tool_calls=extract_openai_tool_calls(response),
         reasoning=extract_openai_reasoning(response),
         cost_usd=(
-            extract_openrouter_cost(response) if include_openrouter_extras else None
+            extract_openrouter_cost(response)
+            if include_openrouter_extras
+            else extract_cost(response) if extract_cost else None
         ),
         raw_response=response.choices[0].message,
     )

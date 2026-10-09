@@ -114,6 +114,30 @@ def extract_openrouter_cost(response: OpenAIChatCompletion) -> float | None:
     return cost_f
 
 
+def extract_edenai_cost(response: OpenAIChatCompletion) -> float | None:
+    """Pull Eden AI's per-request USD cost off a chat-completion response.
+
+    Eden AI reports the USD charge of every request in a ``cost`` field
+    that the OpenAI SDK's typed models don't declare. Read it from the
+    response's ``model_extra``, falling back to ``usage.model_extra``.
+
+    Returns ``None`` for missing, non-finite, or negative values so
+    callers don't accidentally bill at zero or NaN.
+    """
+    cost = (response.model_extra or {}).get("cost")
+    if cost is None and response.usage is not None:
+        cost = (response.usage.model_extra or {}).get("cost")
+    if cost is None:
+        return None
+    try:
+        cost_f = float(cost)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(cost_f) or cost_f < 0:
+        return None
+    return cost_f
+
+
 def extract_openai_reasoning(response: Any) -> str | None:
     """Extract reasoning content from an OpenAI-compatible chat response.
 

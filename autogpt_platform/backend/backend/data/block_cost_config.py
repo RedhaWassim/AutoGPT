@@ -80,6 +80,7 @@ from backend.integrations.credentials_store import (
     apollo_credentials,
     did_credentials,
     e2b_credentials,
+    edenai_credentials,
     elevenlabs_credentials,
     enrichlayer_credentials,
     fal_credentials,
@@ -344,6 +345,12 @@ LLM_COST = (
         _tokens_llm_cost(model, v0_credentials)
         for model in MODEL_COST
         if MODEL_METADATA[model].provider == "v0"
+    ]
+    # Eden AI Models
+    + [
+        _tokens_llm_cost(model, edenai_credentials)
+        for model in MODEL_COST
+        if MODEL_METADATA[model].provider == "edenai"
     ]
     # AI/ML Api Models
     + [

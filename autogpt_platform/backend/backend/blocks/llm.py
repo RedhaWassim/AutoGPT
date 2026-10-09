@@ -91,6 +91,7 @@ _spend_alert_logger = logging.getLogger(__name__)
 LLMProviderName = Literal[
     ProviderName.AIML_API,
     ProviderName.ANTHROPIC,
+    ProviderName.EDENAI,
     ProviderName.GROQ,
     ProviderName.OLLAMA,
     ProviderName.OPENAI,

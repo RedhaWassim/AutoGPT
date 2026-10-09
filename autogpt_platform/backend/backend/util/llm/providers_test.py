@@ -18,9 +18,11 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import anthropic
 import httpx
 import pytest
+from openai.types.chat import ChatCompletion
 from pydantic import ValidationError
 
 from backend.util.llm import providers as providers_mod
+from backend.util.llm.conversions import extract_edenai_cost
 from backend.util.llm.providers import (
     DEFAULT_REQUEST_TIMEOUT_SECONDS,
     FAST_FAIL_TIMEOUT_SECONDS,
@@ -748,6 +750,78 @@ class TestLlamaAPI:
         kwargs = async_create.call_args.kwargs
         # Llama API path doesn't ask for openrouter cost extras
         assert "extra_body" not in kwargs
+
+
+class TestEdenAI:
+    @pytest.mark.asyncio
+    async def test_dispatches_to_edenai_without_slug_prefix(self):
+        fake_response = _fake_openai_chat_response("x", prompt=3, completion=2)
+        async_create = AsyncMock(return_value=fake_response)
+        fake_client = SimpleNamespace(
+            chat=SimpleNamespace(completions=SimpleNamespace(create=async_create))
+        )
+        constructor = MagicMock(return_value=fake_client)
+        with (
+            patch(
+                "backend.util.llm.providers.openai.AsyncOpenAI",
+                constructor,
+            ),
+            patch(
+                "backend.util.llm.providers.extract_openai_reasoning",
+                return_value=None,
+            ),
+            patch(
+                "backend.util.llm.providers.extract_openai_tool_calls",
+                return_value=None,
+            ),
+            patch(
+                "backend.util.llm.providers.extract_edenai_cost",
+                return_value=0.0021,
+            ),
+        ):
+            result = await call_provider(
+                provider="edenai",
+                model="edenai/openai/gpt-5.4-mini",
+                api_key="eden-key",
+                messages=[_msg("user", "hi")],
+                max_tokens=10,
+            )
+        ctor_kwargs = constructor.call_args.kwargs
+        assert ctor_kwargs["base_url"] == "https://api.edenai.run/v3"
+        assert ctor_kwargs["api_key"] == "eden-key"
+        kwargs = async_create.call_args.kwargs
+        # Eden AI addresses models as <provider>/<model>; the catalog
+        # namespace prefix must not reach the API.
+        assert kwargs["model"] == "openai/gpt-5.4-mini"
+        assert "extra_body" not in kwargs
+        assert result.cost_usd == 0.0021
+        assert result.prompt_tokens == 3
+        assert result.completion_tokens == 2
+
+    def test_extract_edenai_cost(self):
+        def completion(**extra):
+            return ChatCompletion.model_validate(
+                {
+                    "id": "chatcmpl-1",
+                    "object": "chat.completion",
+                    "created": 0,
+                    "model": "openai/gpt-5.4-mini",
+                    "choices": [],
+                    "usage": {
+                        "prompt_tokens": 1,
+                        "completion_tokens": 1,
+                        "total_tokens": 2,
+                        **extra.pop("usage_extra", {}),
+                    },
+                    **extra,
+                }
+            )
+
+        assert extract_edenai_cost(completion(cost=0.002)) == 0.002
+        assert extract_edenai_cost(completion(usage_extra={"cost": "0.003"})) == 0.003
+        assert extract_edenai_cost(completion()) is None
+        assert extract_edenai_cost(completion(cost=-1)) is None
+        assert extract_edenai_cost(completion(cost="nan")) is None
 
 
 class TestAIMLAPI:
