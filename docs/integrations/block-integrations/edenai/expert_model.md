@@ -1,6 +1,6 @@
 # Edenai Expert Model
 <!-- MANUAL: file_description -->
-_Add a description of this category of blocks._
+A generic block that calls any Eden AI expert model (OCR and document parsing, image and text analysis, web, audio, video) through the V3 Universal AI endpoint, for features without a dedicated block. Requires an Eden AI API key (`edenai` credential) from https://app.edenai.run.
 <!-- END MANUAL -->
 
 ## Eden AI Expert Model
@@ -10,7 +10,7 @@ Calls any Eden AI expert model (OCR, document parsing, image analysis, text anal
 
 ### How it works
 <!-- MANUAL: how_it_works -->
-_Add technical explanation here._
+The block posts `{model, input}` to the Universal AI endpoint and returns Eden AI's normalized `output`, the provider that served the request and its USD cost. `input` holds the feature-specific fields listed by `GET https://api.edenai.run/v3/info/<feature>/<subfeature>`; files are passed as a public URL or an Eden AI file ID, and some providers require a `language` code. Models whose subfeature ends in `_async` (multipage OCR, table extraction, video) are run as jobs and polled until done. Optional `provider_params` are forwarded to the provider and `fallbacks` lists providers to try if the primary one fails.
 <!-- END MANUAL -->
 
 ### Inputs
@@ -33,7 +33,9 @@ _Add technical explanation here._
 
 ### Possible use case
 <!-- MANUAL: use_case -->
-_Add practical use case examples here._
+**Document parsing**: Extract structured fields from invoices with `ocr/financial_parser/<provider>` or from resumes with `ocr/resume_parser/<provider>`.
+
+**Image and text analysis**: Detect objects with `image/object_detection/<provider>` or entities with `text/named_entity_recognition/<provider>` without a dedicated block.
 <!-- END MANUAL -->
 
 ---
