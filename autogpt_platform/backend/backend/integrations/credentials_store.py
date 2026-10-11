@@ -232,6 +232,14 @@ v0_credentials = APIKeyCredentials(
     expires_at=None,
 )
 
+edenai_credentials = APIKeyCredentials(
+    id="45c3fdd9-79e4-47db-ad0c-ea10cb09f7b0",
+    provider="edenai",
+    api_key=SecretStr(settings.secrets.edenai_api_key),
+    title="Use Credits for Eden AI",
+    expires_at=None,
+)
+
 webshare_proxy_credentials = UserPasswordCredentials(
     id="a5b3c7d9-2e4f-4a6b-8c1d-9e0f1a2b3c4d",
     provider="webshare_proxy",
@@ -281,6 +289,7 @@ DEFAULT_CREDENTIALS = [
     google_maps_credentials,
     llama_api_credentials,
     v0_credentials,
+    edenai_credentials,
     webshare_proxy_credentials,
     openweathermap_credentials,
     elevenlabs_credentials,
@@ -415,6 +424,8 @@ class IntegrationCredentialsStore:
             all_credentials.append(llama_api_credentials)
         if settings.secrets.v0_api_key:
             all_credentials.append(v0_credentials)
+        if settings.secrets.edenai_api_key:
+            all_credentials.append(edenai_credentials)
         if (
             settings.secrets.webshare_proxy_username
             and settings.secrets.webshare_proxy_password

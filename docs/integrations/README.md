@@ -257,6 +257,13 @@ Below is a comprehensive list of all available blocks, categorized by their prim
 | [Claude Code](block-integrations/llm.md#claude-code) | Execute tasks using Claude Code in an E2B sandbox |
 | [Code Generation](block-integrations/llm.md#code-generation) | Generate or refactor code using an OpenAI API key or a connected ChatGPT plan through Codex App Server |
 | [Create Talking Avatar Video](block-integrations/llm.md#create-talking-avatar-video) | This block integrates with D-ID to create video clips and retrieve their URLs |
+| [Eden AI Expert Model](block-integrations/edenai/expert_model.md#eden-ai-expert-model) | Calls any Eden AI expert model (OCR, document parsing, image analysis, text analysis, web, audio,  |
+| [Eden AI Extract Text](block-integrations/edenai/text.md#eden-ai-extract-text) | Extracts the text of an image or PDF (OCR) with an Eden AI expert model |
+| [Eden AI Generate Image](block-integrations/edenai/media.md#eden-ai-generate-image) | Generates an image from a text prompt with an Eden AI expert model |
+| [Eden AI Moderate Text](block-integrations/edenai/text.md#eden-ai-moderate-text) | Checks text for offensive, sexual, violent, hateful or self-harm content with an Eden AI expert model |
+| [Eden AI Speech To Text](block-integrations/edenai/media.md#eden-ai-speech-to-text) | Transcribes speech from an audio or video file with an Eden AI expert model |
+| [Eden AI Text To Speech](block-integrations/edenai/media.md#eden-ai-text-to-speech) | Converts text to speech with an Eden AI expert model |
+| [Eden AI Translate Text](block-integrations/edenai/text.md#eden-ai-translate-text) | Translates text into another language with an Eden AI expert model |
 | [Exa Answer](block-integrations/exa/answers.md#exa-answer) | Get an LLM answer to a question informed by Exa search results |
 | [Exa Create Enrichment](block-integrations/exa/websets_enrichment.md#exa-create-enrichment) | Create enrichments to extract additional structured data from webset items |
 | [Exa Create Research](block-integrations/exa/research.md#exa-create-research) | Create research task with optional waiting - explores web and synthesizes findings with citations |

@@ -25,6 +25,7 @@ export const DEFAULT_COST_PER_1K_TOKENS: Record<string, number> = {
   aiml_api: 0.005,
   llama_api: 0.003,
   v0: 0.005,
+  edenai: 0.005,
 };
 
 // Per-character rates (USD / 1K characters) for TTS providers.

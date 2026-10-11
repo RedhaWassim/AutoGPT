@@ -51,6 +51,7 @@ def _build_catalog() -> CatalogPayload:
         providers=[
             CatalogProvider(name="aiml_api", display_name="AI/ML API"),
             CatalogProvider(name="anthropic", display_name="Anthropic"),
+            CatalogProvider(name="edenai", display_name="Eden AI"),
             CatalogProvider(name="groq", display_name="Groq"),
             CatalogProvider(name="llama_api", display_name="Llama API"),
             CatalogProvider(name="ollama", display_name="Ollama"),
@@ -347,6 +348,107 @@ def _build_catalog() -> CatalogPayload:
                     cache_creation_credits_per_1m=1875.0,
                     provider_input_usd_per_1m=10.00,
                     provider_output_usd_per_1m=50.00,
+                ),
+            ),
+            # ----- Eden AI -----
+            # Eden AI's OpenAI-compatible gateway (BYOK or platform key).
+            # Slugs are namespaced ``edenai/<provider>/<model>`` so they never
+            # collide with OpenRouter slugs; the transport strips the prefix.
+            # Eden AI bills the provider's list price plus a platform fee, so
+            # credits mirror the same model's direct/OpenRouter entry.
+            CatalogModel(
+                slug="edenai/openai/gpt-5.4-mini",
+                display_name="GPT-5.4 Mini (Eden AI)",
+                provider="edenai",
+                creator="openai",
+                context_window=400000,
+                max_output_tokens=128000,
+                price_tier=1,
+                supports_tools=True,
+                supports_json_output=True,
+                cost=CatalogModelCost(
+                    run_credits=2,
+                    input_credits_per_1m=113.0,
+                    output_credits_per_1m=675.0,
+                ),
+            ),
+            CatalogModel(
+                slug="edenai/openai/gpt-5.5",
+                display_name="GPT-5.5 (Eden AI)",
+                provider="edenai",
+                creator="openai",
+                context_window=1050000,
+                max_output_tokens=128000,
+                price_tier=2,
+                supports_tools=True,
+                supports_json_output=True,
+                cost=CatalogModelCost(
+                    run_credits=10,
+                    input_credits_per_1m=750.0,
+                    output_credits_per_1m=4500.0,
+                ),
+            ),
+            CatalogModel(
+                slug="edenai/anthropic/claude-haiku-4-5",
+                display_name="Claude Haiku 4.5 (Eden AI)",
+                provider="edenai",
+                creator="anthropic",
+                context_window=200000,
+                max_output_tokens=64000,
+                price_tier=2,
+                supports_tools=True,
+                cost=CatalogModelCost(
+                    run_credits=4,
+                    input_credits_per_1m=150.0,
+                    output_credits_per_1m=750.0,
+                ),
+            ),
+            CatalogModel(
+                slug="edenai/anthropic/claude-sonnet-5-5",
+                display_name="Claude Sonnet 5.5 (Eden AI)",
+                provider="edenai",
+                creator="anthropic",
+                # Same compaction-cap convention as the direct Claude 5 family.
+                context_window=200000,
+                max_output_tokens=128000,
+                price_tier=3,
+                supports_tools=True,
+                supports_reasoning=True,
+                cost=CatalogModelCost(
+                    run_credits=9,
+                    input_credits_per_1m=300.0,
+                    output_credits_per_1m=1500.0,
+                ),
+            ),
+            CatalogModel(
+                slug="edenai/google/gemini-2.5-flash",
+                display_name="Gemini 2.5 Flash (Eden AI)",
+                provider="edenai",
+                creator="google",
+                context_window=1048576,
+                max_output_tokens=65535,
+                price_tier=1,
+                supports_tools=True,
+                supports_json_output=True,
+                cost=CatalogModelCost(
+                    run_credits=1,
+                    input_credits_per_1m=45.0,
+                    output_credits_per_1m=375.0,
+                ),
+            ),
+            CatalogModel(
+                slug="edenai/mistral/mistral-large-2512",
+                display_name="Mistral Large 3 2512 (Eden AI)",
+                provider="edenai",
+                creator="mistral-ai",
+                context_window=262144,
+                price_tier=2,
+                supports_tools=True,
+                supports_json_output=True,
+                cost=CatalogModelCost(
+                    run_credits=2,
+                    input_credits_per_1m=75.0,
+                    output_credits_per_1m=225.0,
                 ),
             ),
             # ----- Groq -----
